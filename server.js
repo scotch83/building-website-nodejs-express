@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieSession = require('cookie-session');
 const path = require('path');
 const app = express();
 const routes = require('./routes');
@@ -12,7 +13,11 @@ app.get('/home', (req, res) => {
 
 app.use(...routes);
 app.use(express.static(path.join(__dirname, 'static')))
-
+app.use(cookieSession({
+    name: 'session',
+    keys:['mlmlsjàç','"34454']
+}))
+app.set('trust proxy', true);
 app.listen(port, () => {
     console.log("Server listening on port " + port);
 })
