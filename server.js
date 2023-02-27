@@ -6,9 +6,16 @@ const routes = require('./routes');
 const port = process.env.PORT || 3000;
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
-
-app.get('/home', (req, res) => {
-    res.render('pages/index', { pageTitle: "Platone" });
+app.locals.appName = 'ROUX Meetups'
+app.use(async (req, res, next) => {
+    try {
+        const SpeakersService = require('./services/SpeakerService');
+        const service = new SpeakersService('./data/speakers.json');
+        res.locals.speakerNames = await service.getNames();
+        next()
+    } catch (error) {
+        return next(err)
+    }
 })
 
 app.use(...routes);

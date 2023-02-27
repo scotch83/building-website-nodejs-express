@@ -4,11 +4,15 @@ const router = new express.Router();
 const service = new Speakers('./data/speakers.json')
 
 router.get('/', async (req, res) => {
-    const data = await service.getList();
-    res.json(data)
+    const Speakers = require('../services/SpeakerService')
+    const service = new Speakers('./data/speakers.json')
+    const speakers = await service.getList()
+    res.render('layout', { pageTitle: 'Welcome', template: "speakers", speakers });
 })
 router.get('/:shortname', async (req, res) => {
-    const data = await service.getSpeaker(req.params.shortname);
-    res.json(data)
+    const speaker = await service.getSpeaker(req.params.shortname);
+    const artworks = await service.getArtworkForSpeaker(req.params.shortname);
+    console.log(speaker)
+    res.render('layout', { pageTitle: speaker.name, template: "speaker", speaker, artworks });
 })
 module.exports = ['/speakers', router]
